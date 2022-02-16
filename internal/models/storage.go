@@ -5,6 +5,6 @@ import (
 )
 
 type IStorage interface {
-	SetMetrics(metrics []metrics.IMetric)
+	SetMetrics(m []metrics.IMetric)
 	GetMetrics() []metrics.IMetric
 }

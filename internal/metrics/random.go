@@ -13,12 +13,12 @@ type RandomValue struct {
 
 func NewRandomValue() *RandomValue {
 	rand.Seed(time.Now().UnixNano())
-	return &RandomValue{value: rand.Float64()}
+	return &RandomValue{value: rand.Float64()} // #nosec G404 -- no need for cryptographic security here
 }
 
 func (r *RandomValue) Generate() Gauge {
 	r.mu.Lock()
-	r.value = rand.Float64()
+	r.value = rand.Float64() // #nosec G404 -- no need for cryptographic security here
 	value := r.value
 	r.mu.Unlock()
 	return NewMetricRandomValue(value)
