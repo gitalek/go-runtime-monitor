@@ -1,0 +1,121 @@
+linters-settings:
+  goconst:
+    min-len: 2
+    min-occurrences: 3
+  revive:
+    formatter: friendly
+    ignore-generated-header: true
+    severity: warning
+    # Описание всех правил revive: https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md
+    rules:
+      - name: atomic
+      - name: bare-return
+      - name: blank-imports
+      - name: bool-literal-in-expr
+      - name: confusing-naming
+      - name: confusing-results
+      - name: context-as-argument
+      - name: context-keys-type
+      - name: dot-imports
+      - name: duplicated-imports
+      - name: early-return
+      - name: empty-block
+      - name: empty-lines
+      - name: error-naming
+      - name: error-return
+      - name: error-strings
+      - name: errorf
+      - name: function-result-limit
+        arguments:
+          - 3
+      - name: function-length
+        arguments:
+          - 70 # statements
+          - 100 # lines
+      - name: get-return
+      - name: identical-branches
+      - name: if-return
+      - name: increment-decrement
+      - name: imports-blacklist
+        arguments:
+          - "crypto/md5"
+          - "crypto/sha1"
+      - name: import-shadowing
+      - name: line-length-limit
+        arguments:
+          - 140
+      - name: range
+      - name: range-val-in-closure
+      - name: range-val-address
+      - name: redefines-builtin-id
+      - name: string-of-int
+      - name: struct-tag
+      - name: superfluous-else
+      - name: get-return
+      - name: time-naming
+      - name: var-naming
+      - name: var-declaration
+      - name: unconditional-recursion
+      - name: unexported-naming
+      - name: unhandled-error
+        arguments:
+          - "fmt.Print"
+          - "fmt.Printf"
+          - "fmt.Println"
+      - name: unnecessary-stmt
+      - name: unreachable-code
+      - name: waitgroup-by-value
+  govet:
+    enable-all: false
+    enable:
+      - atomicalign
+      - assign
+      - bools
+      - errorsas
+      - httpresponse
+      - loopclosure
+      - lostcancel
+      - nilfunc
+      - stringintconv
+      - unmarshal
+      - unsafeptr
+      - unusedresult
+#    check-shadowing: true
+  misspell:
+    locale: US
+  nolintlint:
+    allow-leading-space: true # don't require machine-readable nolint directives (i.e. with no leading space)
+    allow-unused: false # report any unused nolint directives
+    require-explanation: false # don't require an explanation for nolint directives
+    require-specific: false # don't require nolint directives to be specific about which linter is being skipped
+
+linters:
+  # please, do not use `enable-all`: it's deprecated and will be removed soon.
+  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
+  disable-all: true
+  enable:
+    - bodyclose # |basic; checks whether HTTP response body is closed successfully
+    - deadcode # |def|basic; finds unused code
+    - dogsled # |basic; checks assignments with too many blank identifiers (e.g. x, , , _, := f())
+    - errcheck # |def|basic; checking for unchecked errors in go programs
+    - gochecknoinits # |basic; checks that no init functions are present in Go code
+    - goconst # |basic|advanced; finds repeated strings that could be replaced by a constant
+    - goprintffuncname # |basic; checks that printf-like functions are named with 'f' at the end
+    - gosec # |basic; inspects source code for security problems
+    - gosimple # |def|basic; specializes in simplifying a code
+    - govet # |def|basic; examines Go source code and reports suspicious constructs, such as Printf calls whose arguments do not align with the format string
+    - ineffassign # |def|basic; detects when assignments to existing variables are not used
+    - misspell # |basic; finds commonly misspelled English words in comments
+    - nakedret # |basic; finds naked returns in functions greater than a specified function length
+    - nolintlint # |basic; reports ill-formed or insufficient nolint directives
+    - rowserrcheck # |basic; checks whether sql.Rows.Err is correctly checked
+    - typecheck # |def|basic; like the front-end of a Go compiler, parses and type-checks Go code
+    - unconvert # |basic; identifies unnecessary type conversions; i.e., expressions T(x) where x already has type T
+    - unparam # |basic; reports unused function parameters
+    - unused # |def|basic; checking for unused constants, variables, functions and types
+    - varcheck # |def|basic; finds unused global variables and constants
+    - whitespace # |basic; detection of leading and trailing whitespace
+    - asciicheck # |basic; simple linter to check that your code does not contain non-ASCII identifiers
+    - nestif # |basic;
+    - gci # |basic; controls golang package import order and make it always deterministic
+    - revive # |basic|advanced;
