@@ -1,0 +1,67 @@
+linters-settings:
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  revive:
+    formatter: friendly
+    ignore-generated-header: true
+    severity: warning
+    # Описание всех правил revive: https://github.com/mgechev/revive/blob/master/RULES_DESCRIPTIONS.md
+    rules:
+      # Exported function and methods should have comments.
+      # This warns on undocumented exported functions and methods.
+      - name: exported
+  dupl:
+    threshold: 100
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+    disabled-checks:
+      - dupImport # https://github.com/go-critic/go-critic/issues/845
+      - ifElseChain
+      - octalLiteral
+      - whyNoLint
+      - wrapperFunc
+  gocyclo:
+    min-complexity: 15
+  goimports:
+    local-prefixes: github.com/golangci/golangci-lint
+  golint:
+    min-confidence: 0
+  gomnd:
+    settings:
+      mnd:
+        checks: argument,case,condition,return,operation,assign
+  maligned:
+    suggest-new: true
+
+linters:
+  # please, do not use `enable-all`: it's deprecated and will be removed soon.
+  # inverted configuration with `enable-all` and `disable` is not scalable during updates of golangci-lint
+  disable-all: true
+  enable:
+    - exportloopref # |advanced; checks for pointers to enclosing loop variables
+    - goconst # |basic|advanced; finds repeated strings that could be replaced by a constant
+    - gocritic # |advanced; provides many diagnostics that check for bugs, performance and style issues
+    - gocyclo # |advanced; computes and checks the cyclomatic complexity of functions
+    - gomnd # |basic|advanced; mnd -> Magic Number Detector
+    - noctx # |advanced; finds sending http request without context.Context
+    - staticcheck # |def|advanced; go vet on steroids, applying a ton of static analysis checks
+    - structcheck # |def|advanced; finds unused struct fields
+    - gocognit # |advanced;
+    - prealloc # |advanced;
+    - revive # |basic|advanced;
+    - dupl # |advanced; tool for code clone detection
+
+  # don't enable:
+  # - depguard # |?; checks if package imports are in a list of acceptable packages
+  # - stylecheck # |?; stylecheck is a replacement for golint
+  # - gofmt # |?; checks whether code was gofmt-ed. By default this tool runs with -s option to check for code simplification
+  # - goimports # |?; does everything that gofmt does. Additionally it checks unused imports
+  # - golint # |?; golint differs from gofmt: gofmt reformats Go source code, whereas golint prints out style mistakes
+  # - exhaustive # |?; checks exhaustiveness of enum switch statements
+

@@ -1,0 +1,11 @@
+---
+
+poll_interval: 2
+report_interval: 10
+
+agent:
+  timeout: 1
+
+server:
+  host: "127.0.0.1"
+  port: "8080"
