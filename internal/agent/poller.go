@@ -11,15 +11,15 @@ import (
 
 type Poller struct {
 	storage     models.IStorage
-	pollCount   *metrics.PollCount
-	randomValue *metrics.RandomValue
+	pollCount   *PollCounter
+	randomValue *RandomValueGenerator
 }
 
 func NewPoller(storage models.IStorage) Poller {
 	return Poller{
 		storage:     storage,
-		pollCount:   metrics.NewPollCount(),
-		randomValue: metrics.NewRandomValue(),
+		pollCount:   NewPollCount(),
+		randomValue: NewRandomValue(),
 	}
 }
 
@@ -41,7 +41,7 @@ func (p Poller) poll() []metrics.IMetric {
 	var rtm runtime.MemStats
 	runtime.ReadMemStats(&rtm)
 
-	result := make([]metrics.IMetric, 0, metrics.MetricsCount)
+	result := make([]metrics.IMetric, 0, metrics.Count)
 
 	result = append(result, p.randomValue.Generate())
 

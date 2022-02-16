@@ -6,7 +6,8 @@ const (
 )
 
 const (
-	MetricsCount      = 29
+	Count = 29
+
 	MetricRandomValue = "RandomValue"
 
 	MetricPollCount = "PollCount"
