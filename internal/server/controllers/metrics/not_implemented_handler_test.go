@@ -63,7 +63,7 @@ func testNotImplementedHandler(ts *httptest.Server) func(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				path := tp.GenerateUpdatePath(tt.urlParams.kind, tt.urlParams.name, tt.urlParams.value)
-				resp, body := tp.Request(t, ts, http.MethodPost, path)
+				resp, body := tp.Request(t, ts, http.MethodPost, path) //nolint:bodyclose
 				assert.Equal(t, tt.want.code, resp.StatusCode)
 				assert.Equal(t, tt.want.contentType, resp.Header.Get("Content-Type"))
 				assert.Equal(t, tt.want.body, tp.TrimRespBodyString(body))
