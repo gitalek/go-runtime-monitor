@@ -28,3 +28,7 @@ func TestMetrics_UpdateCounter(t *testing.T) {
 	setupWrapper(t, "Should update gauge", testUpdateCounter)
 	setupWrapper(t, "Failed validation", testUpdateCounterFailedValidation)
 }
+
+func TestMetrics_NotImplementedHandler(t *testing.T) {
+	setupWrapper(t, "Not implemented", testNotImplementedHandler)
+}

@@ -17,8 +17,11 @@ func (app Application) Routes() http.Handler {
 	counters := builtin.NewStorageCounters()
 	metricsController := metrics.New(gauges, counters)
 
-	r.Post("/update/gauge/{name}/{value}", metricsController.UpdateGauge)
-	r.Post("/update/counter/{name}/{value}", metricsController.UpdateCounter)
+	r.Route("/update", func(r chi.Router) {
+		r.Post("/gauge/{name}/{value}", metricsController.UpdateGauge)
+		r.Post("/counter/{name}/{value}", metricsController.UpdateCounter)
+		r.Post("/{unknown_kind}/{name}/{value}", metricsController.NotImplemented)
+	})
 	r.Get("/show", metricsController.Show)
 
 	return r

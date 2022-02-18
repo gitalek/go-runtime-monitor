@@ -1,7 +1,6 @@
 package metrics_test
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,12 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func generateUpdateGaugePath(name, value string) string {
-	return fmt.Sprintf("/update/gauge/%s/%s", name, value)
-}
-
 func testUpdateGauge(ts *httptest.Server) func(t *testing.T) {
-	path := generateUpdateGaugePath("TotalAlloc", "3556944")
+	path := tp.GenerateUpdateGaugePath("TotalAlloc", "3556944")
 	return func(t *testing.T) {
 		type want struct {
 			code        int
@@ -30,8 +25,8 @@ func testUpdateGauge(ts *httptest.Server) func(t *testing.T) {
 				name: "#1",
 				want: want{
 					code:        http.StatusOK,
-					contentType: "text/plain",
-					body:        "",
+					contentType: "text/plain; charset=utf-8",
+					body:        "OK",
 				},
 			},
 		}
@@ -41,7 +36,7 @@ func testUpdateGauge(ts *httptest.Server) func(t *testing.T) {
 				resp, body := tp.Request(t, ts, http.MethodPost, path)
 				assert.Equal(t, tt.want.code, resp.StatusCode)
 				assert.Equal(t, tt.want.contentType, resp.Header.Get("Content-Type"))
-				assert.Equal(t, tt.want.body, body)
+				assert.Equal(t, tt.want.body, tp.TrimRespBodyString(body))
 			})
 		}
 	}
@@ -58,6 +53,11 @@ func testUpdateGaugeFailedValidation(ts *httptest.Server) func(t *testing.T) {
 			contentType string
 			body        string
 		}
+		w := want{
+			code:        http.StatusBadRequest,
+			contentType: "text/plain; charset=utf-8",
+			body:        "Bad Request",
+		}
 		tests := []struct {
 			name      string
 			urlParams urlParams
@@ -69,11 +69,7 @@ func testUpdateGaugeFailedValidation(ts *httptest.Server) func(t *testing.T) {
 					name:  "TotalAlloc",
 					value: "two.one",
 				},
-				want: want{
-					code:        http.StatusBadRequest,
-					contentType: "text/plain",
-					body:        "",
-				},
+				want: w,
 			},
 			{
 				name: "float value (comma)",
@@ -81,21 +77,17 @@ func testUpdateGaugeFailedValidation(ts *httptest.Server) func(t *testing.T) {
 					name:  "TotalAlloc",
 					value: "2,7",
 				},
-				want: want{
-					code:        http.StatusBadRequest,
-					contentType: "text/plain",
-					body:        "",
-				},
+				want: w,
 			},
 		}
 
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				path := generateUpdateGaugePath(tt.urlParams.name, tt.urlParams.value)
+				path := tp.GenerateUpdateGaugePath(tt.urlParams.name, tt.urlParams.value)
 				resp, body := tp.Request(t, ts, http.MethodPost, path)
 				assert.Equal(t, tt.want.code, resp.StatusCode)
 				assert.Equal(t, tt.want.contentType, resp.Header.Get("Content-Type"))
-				assert.Equal(t, tt.want.body, body)
+				assert.Equal(t, tt.want.body, tp.TrimRespBodyString(body))
 			})
 		}
 	}

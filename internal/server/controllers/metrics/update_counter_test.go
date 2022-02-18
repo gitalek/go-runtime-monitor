@@ -1,7 +1,6 @@
 package metrics_test
 
 import (
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -10,12 +9,8 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func generateUpdateCounterPath(name, value string) string {
-	return fmt.Sprintf("/update/counter/%s/%s", name, value)
-}
-
 func testUpdateCounter(ts *httptest.Server) func(t *testing.T) {
-	path := generateUpdateCounterPath("PollCount", "5079")
+	path := tp.GenerateUpdateCounterPath("PollCount", "5079")
 	return func(t *testing.T) {
 		type want struct {
 			code        int
@@ -30,8 +25,8 @@ func testUpdateCounter(ts *httptest.Server) func(t *testing.T) {
 				name: "#1",
 				want: want{
 					code:        http.StatusOK,
-					contentType: "text/plain",
-					body:        "",
+					contentType: "text/plain; charset=utf-8",
+					body:        "OK",
 				},
 			},
 		}
@@ -41,7 +36,7 @@ func testUpdateCounter(ts *httptest.Server) func(t *testing.T) {
 				resp, body := tp.Request(t, ts, http.MethodPost, path)
 				assert.Equal(t, tt.want.code, resp.StatusCode)
 				assert.Equal(t, tt.want.contentType, resp.Header.Get("Content-Type"))
-				assert.Equal(t, tt.want.body, body)
+				assert.Equal(t, tt.want.body, tp.TrimRespBodyString(body))
 			})
 		}
 	}
@@ -58,6 +53,12 @@ func testUpdateCounterFailedValidation(ts *httptest.Server) func(t *testing.T) {
 			contentType string
 			body        string
 		}
+		w := want{
+			code:        http.StatusBadRequest,
+			contentType: "text/plain; charset=utf-8",
+			body:        "Bad Request",
+		}
+
 		tests := []struct {
 			name      string
 			urlParams urlParams
@@ -69,11 +70,7 @@ func testUpdateCounterFailedValidation(ts *httptest.Server) func(t *testing.T) {
 					name:  "PollCount",
 					value: "two",
 				},
-				want: want{
-					code:        http.StatusBadRequest,
-					contentType: "text/plain",
-					body:        "",
-				},
+				want: w,
 			},
 			{
 				name: "float value (dot)",
@@ -81,11 +78,7 @@ func testUpdateCounterFailedValidation(ts *httptest.Server) func(t *testing.T) {
 					name:  "PollCount",
 					value: "2.7",
 				},
-				want: want{
-					code:        http.StatusBadRequest,
-					contentType: "text/plain",
-					body:        "",
-				},
+				want: w,
 			},
 			{
 				name: "float value (comma)",
@@ -93,21 +86,17 @@ func testUpdateCounterFailedValidation(ts *httptest.Server) func(t *testing.T) {
 					name:  "PollCount",
 					value: "2,7",
 				},
-				want: want{
-					code:        http.StatusBadRequest,
-					contentType: "text/plain",
-					body:        "",
-				},
+				want: w,
 			},
 		}
 
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				path := generateUpdateCounterPath(tt.urlParams.name, tt.urlParams.value)
+				path := tp.GenerateUpdateCounterPath(tt.urlParams.name, tt.urlParams.value)
 				resp, body := tp.Request(t, ts, http.MethodPost, path)
 				assert.Equal(t, tt.want.code, resp.StatusCode)
 				assert.Equal(t, tt.want.contentType, resp.Header.Get("Content-Type"))
-				assert.Equal(t, tt.want.body, body)
+				assert.Equal(t, tt.want.body, tp.TrimRespBodyString(body))
 			})
 		}
 	}
