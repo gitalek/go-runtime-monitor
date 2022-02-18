@@ -48,7 +48,6 @@ func (c Client) ReportMetric(wg *sync.WaitGroup, metric metrics.IMetric) error {
 	if err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -61,9 +60,9 @@ func (c Client) generateURL(metric metrics.IMetric) string {
 		"http://%s:%s/update/%s/%s/%s",
 		c.cfg.Server.Host,
 		c.cfg.Server.Port,
-		metric.Type(),
+		metric.Kind(),
 		metric.Name(),
-		metric.Value(),
+		metric.StringifyValue(),
 	)
 	return url
 }

@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"encoding/json"
 	"fmt"
 )
 
@@ -15,10 +16,26 @@ func NewGauge(name string, value float64) Gauge {
 	return Gauge{Metric: NewMetric(name, KindGauge), value: value}
 }
 
-func (r Gauge) Value() string {
-	return fmt.Sprintf("%f", r.value)
+func (g Gauge) StringifyValue() string {
+	return fmt.Sprintf("%f", g.value)
 }
 
-func (r Gauge) String() string {
-	return fmt.Sprintf("type: %s, name: %s, value: %f", r.Type(), r.Name(), r.value)
+func (g Gauge) Value() float64 {
+	return g.value
+}
+
+func (g Gauge) String() string {
+	return fmt.Sprintf("type: %s, name: %s, value: %f", g.Kind(), g.Name(), g.value)
+}
+
+func (g Gauge) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&struct {
+		Kind  Kind    `json:"kind"`
+		Name  string  `json:"name"`
+		Value float64 `json:"value"`
+	}{
+		Kind:  g.kind,
+		Name:  g.name,
+		Value: g.value,
+	})
 }

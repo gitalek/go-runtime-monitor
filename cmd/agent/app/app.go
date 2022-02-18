@@ -1,15 +1,16 @@
-package main
+package app
 
 import (
 	"context"
 	"log"
 	"os"
 	"os/signal"
+	"sync"
 	"syscall"
 
 	"github.com/gitalek/go-runtime-monitor/internal/agent"
 	"github.com/gitalek/go-runtime-monitor/internal/config"
-	"github.com/gitalek/go-runtime-monitor/internal/models/builtin"
+	"github.com/gitalek/go-runtime-monitor/internal/models/agent/builtin"
 )
 
 type Application struct {
@@ -20,9 +21,12 @@ type Application struct {
 
 func NewApplication(cfg config.Config) Application {
 	storage := builtin.NewStorage()
-	poller := agent.NewPoller(storage)
+	pollCount := agent.NewPollCount()
 	client := agent.NewClient(cfg)
-	reporter := agent.NewReporter(client, storage)
+
+	var muPollerReporter sync.Mutex
+	poller := agent.NewPoller(storage, pollCount, &muPollerReporter)
+	reporter := agent.NewReporter(storage, pollCount, client, &muPollerReporter)
 	return Application{
 		cfg:      cfg,
 		poller:   poller,
@@ -42,8 +46,8 @@ func (app Application) Run() {
 		cancel()
 	}()
 
-	go app.poller.SchedulePoll(ctx, app.cfg.PollInterval)
-	go app.reporter.ScheduleReport(ctx, app.cfg.ReportInterval)
+	go app.poller.SchedulePoll(ctx, app.cfg.Agent.PollInterval)
+	go app.reporter.ScheduleReport(ctx, app.cfg.Agent.ReportInterval)
 
 	<-ctx.Done()
 }

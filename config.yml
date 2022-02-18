@@ -1,11 +1,13 @@
 ---
 
-poll_interval: 2
-report_interval: 10
-
 agent:
   timeout: 1
+  poll_interval: 2
+  report_interval: 10
 
 server:
   host: "127.0.0.1"
   port: "8080"
+  read_timeout: 5
+  write_timeout: 15
+  idle_timeout: 60

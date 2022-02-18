@@ -11,19 +11,22 @@ const (
 )
 
 type Config struct {
-	PollInterval   int `yaml:"poll_interval"`
-	ReportInterval int `yaml:"report_interval"`
-	Agent          Agent
-	Server         Server
+	Agent  Agent
+	Server Server
 }
 
 type Agent struct {
-	Timeout int `yaml:"timeout"`
+	PollInterval   int `yaml:"poll_interval"`
+	ReportInterval int `yaml:"report_interval"`
+	Timeout        int `yaml:"timeout"`
 }
 
 type Server struct {
-	Host string `yaml:"host"`
-	Port string `yaml:"port"`
+	Host         string `yaml:"host"`
+	Port         string `yaml:"port"`
+	ReadTimeout  int    `yaml:"read_timeout"`
+	WriteTimeout int    `yaml:"write_timeout"`
+	IdleTimeout  int    `yaml:"idle_timeout"`
 }
 
 func Load(path string) (Config, error) {
