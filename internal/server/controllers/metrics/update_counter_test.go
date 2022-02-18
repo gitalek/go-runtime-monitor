@@ -70,7 +70,7 @@ func testUpdateCounterFailedValidation(ts *httptest.Server) func(t *testing.T) {
 					value: "two",
 				},
 				want: want{
-					code:        http.StatusUnprocessableEntity,
+					code:        http.StatusBadRequest,
 					contentType: "text/plain",
 					body:        "",
 				},
@@ -82,7 +82,7 @@ func testUpdateCounterFailedValidation(ts *httptest.Server) func(t *testing.T) {
 					value: "2.7",
 				},
 				want: want{
-					code:        http.StatusUnprocessableEntity,
+					code:        http.StatusBadRequest,
 					contentType: "text/plain",
 					body:        "",
 				},
@@ -94,7 +94,7 @@ func testUpdateCounterFailedValidation(ts *httptest.Server) func(t *testing.T) {
 					value: "2,7",
 				},
 				want: want{
-					code:        http.StatusUnprocessableEntity,
+					code:        http.StatusBadRequest,
 					contentType: "text/plain",
 					body:        "",
 				},

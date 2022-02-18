@@ -14,7 +14,7 @@ func (m Metrics) UpdateCounter(w http.ResponseWriter, r *http.Request) {
 	name, value := chi.URLParam(r, "name"), chi.URLParam(r, "value")
 	v, err := normalizeCounterInput(value)
 	if err != nil {
-		w.WriteHeader(http.StatusUnprocessableEntity)
+		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
