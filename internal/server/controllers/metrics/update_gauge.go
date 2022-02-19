@@ -31,5 +31,14 @@ func (m Metrics) UpdateGauge(w http.ResponseWriter, r *http.Request) {
 }
 
 func normalizeGaugeInput(value string) (float64, error) {
-	return strconv.ParseFloat(value, 64)
+	n, err := strconv.ParseFloat(value, 64)
+	if err != nil {
+		return n, err
+	}
+	roundedString := fmt.Sprintf("%.3f", n)
+	n, err = strconv.ParseFloat(roundedString, 64)
+	if err != nil {
+		return n, err
+	}
+	return n, err
 }
