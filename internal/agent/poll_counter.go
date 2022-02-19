@@ -23,6 +23,12 @@ func (c *PollCounter) Up() metrics.Counter {
 	return metrics.NewMetricPollCount(value)
 }
 
+func (c *PollCounter) Reset() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.value = 0
+}
+
 func (c *PollCounter) CurrentValue() metrics.Counter {
 	c.mu.Lock()
 	value := c.value

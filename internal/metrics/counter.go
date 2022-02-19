@@ -1,6 +1,9 @@
 package metrics
 
-import "fmt"
+import (
+	"encoding/json"
+	"fmt"
+)
 
 type Counter struct {
 	Metric
@@ -13,10 +16,26 @@ func NewCounter(name string, value int64) Counter {
 	return Counter{Metric: NewMetric(name, KindCounter), value: value}
 }
 
-func (r Counter) Value() string {
-	return fmt.Sprintf("%d", r.value)
+func (c Counter) StringifyValue() string {
+	return fmt.Sprintf("%d", c.value)
 }
 
-func (r Counter) String() string {
-	return fmt.Sprintf("type: %s, name: %s, value: %d", r.Type(), r.Name(), r.value)
+func (c Counter) Value() int64 {
+	return c.value
+}
+
+func (c Counter) String() string {
+	return fmt.Sprintf("type: %s, name: %s, value: %d", c.Kind(), c.Name(), c.value)
+}
+
+func (c Counter) MarshalJSON() ([]byte, error) {
+	return json.Marshal(&struct {
+		Kind  Kind   `json:"kind"`
+		Name  string `json:"name"`
+		Value int64  `json:"value"`
+	}{
+		Kind:  c.kind,
+		Name:  c.name,
+		Value: c.value,
+	})
 }

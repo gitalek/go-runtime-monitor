@@ -1,4 +1,4 @@
-package models
+package agent
 
 import (
 	"github.com/gitalek/go-runtime-monitor/internal/metrics"

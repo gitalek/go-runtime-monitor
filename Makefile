@@ -25,3 +25,26 @@ run/agent:
 .PHONY: run/server
 run/server:
 	go run ./cmd/server/
+# test: run tests
+.PHONY: test
+test: test/server/controllers/metrics
+## test/coverage/profile: generate coverage profile
+.PHONY: test/coverage/profile
+test/coverage/profile:
+	@[ -d tmp ] || mkdir tmp
+	@go clean -testcache && \
+	go test -race -cover -p 1 \
+		github.com/gitalek/go-runtime-monitor/internal/server/controllers/metrics \
+		-coverprofile=tmp/profile.out
+## test/coverage: show detailed (per function) test coverage in terminal
+.PHONY: test/coverage
+test/coverage: test/coverage/profile
+	go tool cover -func=tmp/profile.out
+## test/coverage/html: generate and show detailed test coverage (html-format) in browser
+.PHONY: test/coverage/html
+test/coverage/html: test/coverage/profile
+	go tool cover -html=tmp/profile.out
+# test/server/controllers/metrics: run metrics tests
+.PHONY: test/server/controllers/metrics
+test/server/controllers/metrics:
+	go clean -testcache && go test -race ./internal/server/controllers/metrics

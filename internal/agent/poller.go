@@ -3,22 +3,28 @@ package agent
 import (
 	"context"
 	"runtime"
+	"sync"
 	"time"
 
 	"github.com/gitalek/go-runtime-monitor/internal/metrics"
-	"github.com/gitalek/go-runtime-monitor/internal/models"
+	"github.com/gitalek/go-runtime-monitor/internal/models/agent"
 )
 
 type Poller struct {
-	storage     models.IStorage
+	// TODO: bottleneck
+	// need for sync state (pollCount) between Reporter and Poller
+	mu *sync.Mutex
+
+	storage     agent.IStorage
 	pollCount   *PollCounter
 	randomValue *RandomValueGenerator
 }
 
-func NewPoller(storage models.IStorage) Poller {
+func NewPoller(storage agent.IStorage, pollCount *PollCounter, mu *sync.Mutex) Poller {
 	return Poller{
+		mu:          mu,
 		storage:     storage,
-		pollCount:   NewPollCount(),
+		pollCount:   pollCount,
 		randomValue: NewRandomValue(),
 	}
 }
@@ -30,8 +36,10 @@ func (p Poller) SchedulePoll(ctx context.Context, pollInterval int) {
 	for {
 		select {
 		case <-ticker.C:
+			p.mu.Lock()
 			data := p.poll()
 			p.storage.SetMetrics(data)
+			p.mu.Unlock()
 		case <-ctx.Done():
 			return
 		}

@@ -44,9 +44,9 @@ const (
 type Kind string
 
 type IMetric interface {
-	Type() string
+	Kind() string
 	Name() string
-	Value() string
+	StringifyValue() string
 	String() string
 }
 
@@ -66,6 +66,6 @@ func (m Metric) Name() string {
 	return m.name
 }
 
-func (m Metric) Type() string {
+func (m Metric) Kind() string {
 	return string(m.kind)
 }
