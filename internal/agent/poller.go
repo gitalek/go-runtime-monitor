@@ -49,7 +49,7 @@ func (p Poller) poll() []metrics.IMetric {
 	var rtm runtime.MemStats
 	runtime.ReadMemStats(&rtm)
 
-	result := make([]metrics.IMetric, 0, metrics.Count)
+	result := make([]metrics.IMetric, 0, metrics.MetricKindList.Count())
 
 	result = append(result, p.randomValue.Generate())
 
