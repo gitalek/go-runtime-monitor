@@ -42,7 +42,7 @@ func (m Metrics) getMetricGauge(w http.ResponseWriter, _ *http.Request, name str
 		return
 	}
 
-	_, err = w.Write([]byte(fmt.Sprintf("%f", metric.Value())))
+	_, err = w.Write([]byte(fmt.Sprintf("%.3f", metric.Value())))
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
