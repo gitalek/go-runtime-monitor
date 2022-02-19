@@ -34,23 +34,23 @@ const (
 	MetricTotalAlloc    = "TotalAlloc"
 )
 
-type ListMetrics map[string]Kind
+type ListM map[string]Kind
 
-func (l ListMetrics) Exists(metric string) bool {
+func (l ListM) Exists(metric string) bool {
 	_, ok := l[metric]
 	return ok
 }
 
-func (l ListMetrics) Kind(metric string) (Kind, bool) {
+func (l ListM) Kind(metric string) (Kind, bool) {
 	k, ok := l[metric]
 	return k, ok
 }
 
-func (l ListMetrics) Count() int {
+func (l ListM) Count() int {
 	return len(l)
 }
 
-var MetricKindList = ListMetrics{
+var ListMetrics = ListM{
 	MetricRandomValue:   KindGauge,
 	MetricPollCount:     KindCounter,
 	MetricAlloc:         KindGauge,

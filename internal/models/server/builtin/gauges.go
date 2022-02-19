@@ -5,6 +5,7 @@ import (
 
 	"github.com/gitalek/go-runtime-monitor/internal/metrics"
 	"github.com/gitalek/go-runtime-monitor/internal/models/server"
+	"github.com/gitalek/go-runtime-monitor/internal/server/errors"
 )
 
 type StorageGauges struct {
@@ -24,8 +25,22 @@ func (s *StorageGauges) Set(metric metrics.Gauge) {
 	s.storage[metric.Name()] = metric
 }
 
-func (s *StorageGauges) GetAll() map[string]metrics.Gauge {
+func (s *StorageGauges) Get(name string) (metrics.Gauge, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	return s.storage
+	m, ok := s.storage[name]
+	if !ok {
+		return metrics.Gauge{}, errors.ErrMetricNotFound
+	}
+	return m, nil
+}
+
+func (s *StorageGauges) GetAll() []metrics.Gauge {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	gauges := make([]metrics.Gauge, 0, len(s.storage))
+	for _, g := range s.storage {
+		gauges = append(gauges, g)
+	}
+	return gauges
 }

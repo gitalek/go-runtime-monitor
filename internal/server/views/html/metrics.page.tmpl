@@ -1,0 +1,55 @@
+{{define "metrics"}}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Metrics</title>
+    <meta charset="UTF-8">
+</head>
+<style>
+    tr:nth-child(even) {
+        background-color: #D6EEEE;
+    }
+</style>
+<body>
+<h2>Metrics</h2>
+{{if .Counters}}
+<h3>Counters</h3>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Kind</th>
+    </tr>
+    {{range .Counters}}
+    <tr>
+        <td>{{.Name}}</td>
+        <td>{{.Value}}</td>
+        <td>{{.Kind}}</td>
+    </tr>
+    {{end}}
+</table>
+{{else}}
+<p>There are no Counters metrics yet. Try requesting later.</p>
+{{end}}
+
+{{if .Gauges}}
+<h3>Gauges</h3>
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Value</th>
+        <th>Kind</th>
+    </tr>
+    {{range .Gauges}}
+        <tr>
+            <td>{{.Name}}</td>
+            <td>{{.Value}}</td>
+            <td>{{.Kind}}</td>
+        </tr>
+    {{end}}
+</table>
+{{else}}
+<p>There are no Gauges metrics yet. Try requesting later.</p>
+{{end}}
+{{end}}
+</body>

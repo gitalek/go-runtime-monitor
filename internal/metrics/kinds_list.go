@@ -7,13 +7,18 @@ const (
 
 type Kind string
 
-type ListKinds map[Kind]struct{}
+type ListK map[Kind]struct{}
 
-func (l ListKinds) Exists(kind Kind) bool {
+func (l ListK) Exists(kind Kind) bool {
 	_, ok := l[kind]
 	return ok
 }
 
-func (l ListKinds) Count() int {
+func (l ListK) Count() int {
 	return len(l)
+}
+
+var ListKinds = ListK{
+	KindGauge:   struct{}{},
+	KindCounter: struct{}{},
 }
