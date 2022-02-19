@@ -14,7 +14,7 @@ import (
 func (m Metrics) UpdateGauge(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/plain; charset=utf-8")
 	name, value := chi.URLParam(r, "name"), chi.URLParam(r, "value")
-	v, err := normalizeGaugeInput(value)
+	v, err := validateGaugeInput(value)
 	if err != nil {
 		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
@@ -30,6 +30,6 @@ func (m Metrics) UpdateGauge(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func normalizeGaugeInput(value string) (float64, error) {
+func validateGaugeInput(value string) (float64, error) {
 	return strconv.ParseFloat(value, 64)
 }

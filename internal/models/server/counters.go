@@ -4,5 +4,6 @@ import "github.com/gitalek/go-runtime-monitor/internal/metrics"
 
 type IStorageCounters interface {
 	Update(metric metrics.Counter)
-	GetAll() map[string]metrics.Counter
+	Get(name string) (metrics.Counter, error)
+	GetAll() []metrics.Counter
 }

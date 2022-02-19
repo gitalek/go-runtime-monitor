@@ -22,7 +22,8 @@ func (app Application) Routes() http.Handler {
 		r.Post("/counter/{name}/{value}", metricsController.UpdateCounter)
 		r.Post("/{unknown_kind}/{name}/{value}", metricsController.NotImplemented)
 	})
-	r.Get("/show", metricsController.Show)
+	r.Get("/value/{kind}/{name}", metricsController.GetMetric)
+	r.Get("/", metricsController.ShowMetrics)
 
 	return r
 }

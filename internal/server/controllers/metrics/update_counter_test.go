@@ -33,7 +33,8 @@ func testUpdateCounter(ts *httptest.Server) func(t *testing.T) {
 
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
-				resp, body := tp.Request(t, ts, http.MethodPost, path) //nolint:bodyclose
+				resp, body := tp.Request(t, ts, http.MethodPost, path)
+				defer resp.Body.Close()
 				assert.Equal(t, tt.want.code, resp.StatusCode)
 				assert.Equal(t, tt.want.contentType, resp.Header.Get("Content-Type"))
 				assert.Equal(t, tt.want.body, tp.TrimRespBodyString(body))
@@ -93,7 +94,8 @@ func testUpdateCounterFailedValidation(ts *httptest.Server) func(t *testing.T) {
 		for _, tt := range tests {
 			t.Run(tt.name, func(t *testing.T) {
 				path := tp.GenerateUpdateCounterPath(tt.urlParams.name, tt.urlParams.value)
-				resp, body := tp.Request(t, ts, http.MethodPost, path) //nolint:bodyclose
+				resp, body := tp.Request(t, ts, http.MethodPost, path)
+				defer resp.Body.Close()
 				assert.Equal(t, tt.want.code, resp.StatusCode)
 				assert.Equal(t, tt.want.contentType, resp.Header.Get("Content-Type"))
 				assert.Equal(t, tt.want.body, tp.TrimRespBodyString(body))

@@ -1,48 +1,5 @@
 package metrics
 
-const (
-	KindGauge   Kind = "gauge"
-	KindCounter Kind = "counter"
-)
-
-const (
-	Count = 29
-
-	MetricRandomValue = "RandomValue"
-
-	MetricPollCount = "PollCount"
-
-	MetricAlloc         = "Alloc"
-	MetricBuckHashSys   = "BuckHashSys"
-	MetricFrees         = "Frees"
-	MetricGCCPUFraction = "GCCPUFraction"
-	MetricGCSys         = "GCSys"
-	MetricHeapAlloc     = "HeapAlloc"
-	MetricHeapIdle      = "HeapIdle"
-	MetricHeapInuse     = "HeapInuse"
-	MetricHeapObjects   = "HeapObjects"
-	MetricHeapReleased  = "HeapReleased"
-	MetricHeapSys       = "HeapSys"
-	MetricLastGC        = "LastGC"
-	MetricLookups       = "Lookups"
-	MetricMCacheInuse   = "MCacheInuse"
-	MetricMCacheSys     = "MCacheSys"
-	MetricMSpanInuse    = "MSpanInuse"
-	MetricMSpanSys      = "MSpanSys"
-	MetricMallocs       = "Mallocs"
-	MetricNextGC        = "NextGC"
-	MetricNumForcedGC   = "NumForcedGC"
-	MetricNumGC         = "NumGC"
-	MetricOtherSys      = "OtherSys"
-	MetricPauseTotalNs  = "PauseTotalNs"
-	MetricStackInuse    = "StackInuse"
-	MetricStackSys      = "StackSys"
-	MetricSys           = "Sys"
-	MetricTotalAlloc    = "TotalAlloc"
-)
-
-type Kind string
-
 type IMetric interface {
 	Kind() string
 	Name() string

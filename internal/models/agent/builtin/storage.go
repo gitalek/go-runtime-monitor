@@ -35,8 +35,6 @@ func (s *Storage) GetMetrics() []metrics.IMetric {
 	defer s.mu.Unlock()
 	result := make([]metrics.IMetric, 0, len(s.metrics))
 	for _, metric := range s.metrics {
-		if metric.Name() == metrics.MetricPollCount {
-		}
 		result = append(result, metric)
 	}
 	return result
